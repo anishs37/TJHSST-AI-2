@@ -1,1 +1,1 @@
-# TJHSST-AI-2
+# TJHSST Artificial Intelligence 2
