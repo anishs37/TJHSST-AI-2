@@ -9,13 +9,15 @@ s = "While inside they wined and dined, safe from the howling wind.\nAnd she whi
 
 flags = []
 counter = 0
-indTwo = len(s)
+indTwo = len(reg)
+testCounter = 0
 
 for ind, char in enumerate(reg):
     if(counter == 2):
         flags.append(char)
 
-        if(indTwo != len(reg)):
+        if(ind != len(reg) and testCounter == 0):
+            testCounter += 1
             indTwo = ind
 
     if(char == '/'):
