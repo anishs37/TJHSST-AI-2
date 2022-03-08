@@ -4,7 +4,7 @@ import random
 import operator
 import sys
 
-alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alphabet = "ETAOINSHRDLCUMWFGYPBVKXJQZ"
 POPULATION_SIZE = 500
 NUM_CLONES = 1
 TOURNAMENT_SIZE = 20
