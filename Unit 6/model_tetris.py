@@ -184,7 +184,6 @@ to_print = []
 
 for orien in orientations:
     num_cols = len(orien)
-    max_checks = []
 
     for pl in range(11 - num_cols):
         maxis = []
@@ -220,8 +219,6 @@ for orien in orientations:
             to_print.append(st_to_pt)
 
         board_list_rep = orig_board_list[:]
-        # print()
-        # print()
         locs_to_place = []
 
 file_path = 'tetrisout.txt'
