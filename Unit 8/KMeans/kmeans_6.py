@@ -6,6 +6,7 @@ import random
 
 k = 6
 all_data = []
+all_all_data = dict()
 
 with open('star_data.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
@@ -14,10 +15,11 @@ with open('star_data.csv') as csv_file:
     for row in csv_reader:
         if(line_ct >= 1):
             all_data.append((math.log(float(row[0])), math.log(float(row[1])), math.log(float(row[2])), float(row[3])))
+            all_all_data[all_data[line_ct - 1]] = int(row[4])
         
         line_ct += 1
 
-#print(all_data)
+# print(all_all_data)
 
 '''
 Brown Dwarf -> Star Type = 0
@@ -61,16 +63,59 @@ def find_stars_dict(orig_sets):
     return stars_dict
 
 def print_results(stars_dict):
-    print(str(len(stars_dict[0])) + " " + str(len(stars_dict[1])) + " " + str(len(stars_dict[2])) + " " + str(len(stars_dict[3])) + " " + str(len(stars_dict[4])) + " " + str(len(stars_dict[5])))
-    sq_er = 0
+    # print(str(len(stars_dict[0])) + " " + str(len(stars_dict[1])) + " " + str(len(stars_dict[2])) + " " + str(len(stars_dict[3])) + " " + str(len(stars_dict[4])) + " " + str(len(stars_dict[5])))
+    elem_0, elem_1, elem_2, elem_3, elem_4, elem_5 = [], [], [], [], [], []
 
-    for i in range(k):
-        sq_er += (len(stars_dict[i]) - 40) ** 2
+    for elem in stars_dict[0]:
+        elem_check = all_all_data[elem]
+        elem_0.append(elem_check)
+    
+    print("Mean 0: " + str(elem_0))
+    print()
 
-    print(sq_er)
+    for elem in stars_dict[1]:
+        elem_check = all_all_data[elem]
+        elem_1.append(elem_check)
+    
+    print("Mean 1: " + str(elem_1))
+    print()
+
+    for elem in stars_dict[2]:
+        elem_check = all_all_data[elem]
+        elem_2.append(elem_check)
+    
+    print("Mean 2: " + str(elem_2))
+    print()
+
+    for elem in stars_dict[3]:
+        elem_check = all_all_data[elem]
+        elem_3.append(elem_check)
+    
+    print("Mean 3: " + str(elem_3))
+    print()
+
+    for elem in stars_dict[4]:
+        elem_check = all_all_data[elem]
+        elem_4.append(elem_check)
+    
+    print("Mean 4: " + str(elem_4))
+    print()
+
+    for elem in stars_dict[5]:
+        elem_check = all_all_data[elem]
+        elem_5.append(elem_check)
+    
+    print("Mean 5: " + str(elem_5))
+
+    # sq_er = 0
+
+    # for i in range(k):
+    #     sq_er += (len(stars_dict[i]) - 40) ** 2
+
+    # print(sq_er)
     
 stars_dict = find_stars_dict(orig_sets)
-print_results(stars_dict)
+# print_results(stars_dict)
 
 for check in range(15):
     for l in stars_dict:
@@ -83,6 +128,6 @@ for check in range(15):
 
         tuple_means = tuple(list_means)
         orig_sets[l] = tuple_means
-        
-    stars_dict = find_stars_dict(orig_sets)
-    print_results(stars_dict)
+        stars_dict = find_stars_dict(orig_sets)
+
+print_results(stars_dict)
