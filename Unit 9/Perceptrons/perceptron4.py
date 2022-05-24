@@ -65,7 +65,7 @@ if(chal_to_comp == 2):
     list_ws = [w0, w1, w2]
     list_bs = [w0, b1, b2]
 
-    x = np.array([[int(sys.argv[1]), int(sys.argv[2])]])     ## point coordinates
+    x = np.array([[float(sys.argv[1]), float(sys.argv[2])]])     ## point coordinates
     val_ret = p_net(step, x, list_ws, list_bs)
 
     if(val_ret[0][0] < 0.5):
