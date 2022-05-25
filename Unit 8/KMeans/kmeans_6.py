@@ -117,7 +117,7 @@ def print_results(stars_dict):
 stars_dict = find_stars_dict(orig_sets)
 # print_results(stars_dict)
 
-for check in range(15):
+for check in range(80):
     for l in stars_dict:
         list_check = stars_dict[l]
         list_means = list()
@@ -128,6 +128,6 @@ for check in range(15):
 
         tuple_means = tuple(list_means)
         orig_sets[l] = tuple_means
-        stars_dict = find_stars_dict(orig_sets)
+    stars_dict = find_stars_dict(orig_sets)
 
 print_results(stars_dict)

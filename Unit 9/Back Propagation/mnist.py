@@ -36,6 +36,9 @@ def backprop(numEpochs, A, Aderiv, trainSet, list_w, list_b):
             for ct, w_lay in enumerate(list_w):
                 if(ct != 0):
                     b_lay = list_b[ct]
+                    print(a_vals[ct-1].shape)
+                    print(b_lay.shape)
+                    print(w_lay.shape)
                     dot.append((a_vals[ct - 1])@w_lay + b_lay)
                     a_vals.append(act(dot[ct]))
             
@@ -43,6 +46,8 @@ def backprop(numEpochs, A, Aderiv, trainSet, list_w, list_b):
             delta = [None] * n
             delta.append(actDeriv(dot[n])*(yVal - a_vals[n]))
             for lay in range(n - 1, 0, -1):
+                print("deltas[lay + 1] shape: " + str((delta[lay + 1]).shape))
+                print("w[lay+1].transpose() shape " + str((list_w[lay+1].transpose()).shape))
                 delta[lay] = actDeriv(dot[lay])*(delta[lay + 1]@list_w[lay + 1].transpose())
             for ct, delVal in enumerate(delta):
                 if(ct != 0):
@@ -85,6 +90,8 @@ with open(train_path) as csv_file:
         x_np = np.array([x_vals])
         y_np = np.array([y_val])
         train_set.append((x_np, y_np))
+
+print(train_set[0][0])
 
 with open(test_path) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
