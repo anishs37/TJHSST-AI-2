@@ -3,7 +3,9 @@ import urllib.request
 import io
 from PIL import Image
 import random
+import numpy as np
 import time
+
 # URL = 'https://i.pinimg.com/originals/95/2a/04/952a04ea85a8d1b0134516c52198745e.jpg'
 # f = io.BytesIO(urllib.request.urlopen(URL).read()) # Download the picture at the url as a file object
 # img = Image.open(f) # You can also use this on a local file; just put the local filename in quotes in place of f.
@@ -22,6 +24,9 @@ f = io.BytesIO(urllib.request.urlopen(URL).read())
 img = Image.open(f)
 dims = img.size
 pix = img.load()
+orig_img = Image.open(f)
+orig_dims = orig_img.size
+orig_pix = orig_img.load()
 orig_pix_vals = []
 
 for x in range(0, dims[0]):
@@ -29,7 +34,8 @@ for x in range(0, dims[0]):
         pix_vals = pix[x,y]
         orig_pix_vals.append(pix_vals)
 
-#Naive 8
+# Naive 8
+
 # for x in range(0, dims[0]):
 #     for y in range(0, dims[1]):
 #         upd_pix_vals = []
@@ -42,7 +48,16 @@ for x in range(0, dims[0]):
 #         tup_app = tuple(upd_pix_vals)
 #         pix[x,y] = tup_app
 
-# naive_8 = img.save('naive8.png')
+orig_rgb = []
+k = int(sys.argv[2])
+
+if(k == 8):
+    for i in range(0, 256, 255):
+        for j in range(0, 256, 255):
+            for l in range(0, 256, 255):
+                orig_rgb.append((i,j,l))
+
+# naive_8 = img.save('naive8_dithered.png')
 
 # Naive 27
 # for x in range(0, dims[0]):
@@ -59,18 +74,30 @@ for x in range(0, dims[0]):
 #         tup_app = tuple(upd_pix_vals)
 #         pix[x,y] = tup_app
 
+# print(pix[0,0])
+
+if(k == 27):
+    for i in range(0, 256, 127):
+        if(i == 254):
+            i = 255
+        for j in range(0, 256, 127):
+            if(j == 254):
+                j = 255
+            for l in range(0, 256, 127):
+                if(l == 254):
+                    l = 255
+                orig_rgb.append((i,j,l))
+
 # naive_27 = img.save('naive27.png')
 
-k = int(sys.argv[2])
 dict_colors = dict()
-rand_pts = []
 orig_rgb = []
+list_sort = sorted(orig_pix_vals)
+list_check = np.linspace(len(list_sort) - 1, 0, endpoint = False, num = k)[::-1]
 
-for i in range(k):
-    rand_x, rand_y = random.randint(0, dims[0]), random.randint(0, dims[1])
-    rgb_vals = pix[rand_x,rand_y]
+for val in list_check:
+    rgb_vals = list_sort[round(val)]
     if(rgb_vals not in orig_rgb):
-        rand_pts.append((rand_x, rand_y))
         orig_rgb.append(rgb_vals)
 
 def find_rgb_dict(sets):
@@ -104,9 +131,8 @@ def get_results(prev_dict, rgb_dict, prevError):
         sq_err += (val ** 2)
     num_0 = list_diff.count(0)
     err_ratio = sq_err / prevError
-    print((list_diff, err_ratio))
-    #  or (err_ratio >= 0.97 and err_ratio <= 1.03)
-    if(num_0 == k):
+    # print((list_diff, err_ratio))
+    if(num_0 == k or (err_ratio >= 0.98 and err_ratio <= 1.02)):
         return (True, sq_err)
     else:
         return (False, sq_err)
@@ -147,12 +173,41 @@ def return_lowest_error(x, y):
     
     return min_loc
 
-for x in range(0, dims[0]):
-    for y in range(0, dims[1]):
+for y in range(0, dims[1] - 1):
+    for x in range(0, dims[0] - 1):
         num_loc = return_lowest_error(x, y)
         mean_to_use = orig_rgb[num_loc]
+        old_pix = pix[x,y]
         pix[x,y] = (round(mean_to_use[0]), round(mean_to_use[1]), round(mean_to_use[2]))
+        # upd_pix_vals_2 = []
+        # for val in pix[x,y]:
+        #     if(val < (128)):
+        #         upd_pix_vals_2.append(0)           
+        #     else:
+        #         upd_pix_vals_2.append(255)
+        # tup_app = tuple(upd_pix_vals_2)
+        # pix[x,y] = tup_app
+        # old_pix = orig_pix[x,y]
+        quant_error = (old_pix[0] - pix[x,y][0], old_pix[1] - pix[x,y][1], old_pix[2] - pix[x,y][2])
+        pix[x+1,y] = (pix[x+1,y][0] + round(quant_error[0] * (7/16)), pix[x+1,y][0] + round(quant_error[1] * (7/16)), pix[x+1,y][2] + round(quant_error[2] * (7/16)))
+        pix[x-1,y+1] = (pix[x-1,y+1][0] + round(quant_error[0] * (3/16)), pix[x-1,y+1][1] + round(quant_error[1] * (3/16)), pix[x-1,y+1][2] + round(quant_error[2] * (3/16)))
+        pix[x,y+1] = (pix[x,y+1][0] + round(quant_error[0] * (5/16)), pix[x,y+1][1] + round(quant_error[1] * (5/16)), pix[x,y+1][2] + round(quant_error[2] * (5/16)))
+        pix[x+1,y+1] = (pix[x+1,y+1][0] + round(quant_error[0] * (1/16)), pix[x+1,y+1][1] + round(quant_error[1] * (1/16)), pix[x+1,y+1][2] + round(quant_error[2] * (1/16)))
 
-final_img = img.save("kmeansout.png")
+offset = dims[0]//k
+new_img = Image.new("RGB", (dims[0], dims[1] + (offset)), 0)
+new_pix = new_img.load()
+
+for i in range(img.size[0]):
+    for j in range(img.size[1]):
+        new_pix[i, j] = pix[i, j]
+
+orig_rgb = [tuple([round(j) for j in orig_rgb[i]]) for i in range(k)]
+for i in range(k):
+    for j in range(offset):
+        for k in range(offset):
+            new_pix[j+i*offset, img.size[1]+k] = orig_rgb[i]
+
+final_img = new_img.save("kmeansout.png")
 end_time = time.time()
-print(end_time - start_time)
+new_img.show()
