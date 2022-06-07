@@ -296,3 +296,19 @@ print(str(len(word_list_10_final)) + " total matches")
 for i in range(min(5, len(word_list_10_final))):
     print(word_list_10_final[i].lower())
 print()
+
+'''
+Challenges that needed to be solved:
+
+1: Match all words of minimum length that contain each vowel at least once.
+2: Match all words of maximum length that contain precisely 5 vowels.
+3: Match all words of maximum length where the first letter reappears as the last letter but does not appear
+anywhere else in the word.
+4: Match all words where the first three letters, reversed, are the last three letters (overlapping allowed).
+5: Match all words where there is exactly one “b”, exactly one “t”, and they are adjacent to each other.
+6: Match all words with the longest contiguous block of a single letter.
+7: Match all words with the greatest number of a repeated letter
+8: Match all words with the greatest number of adjacent pairs of identical letters.
+9: Match all words with the greatest number of consonants.
+10: Match all words of maximum length where no letter is repeated more than once.
+'''

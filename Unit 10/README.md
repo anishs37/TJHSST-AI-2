@@ -1,0 +1,2 @@
+# Unit 10: fast.ai
+We concluded the year by taking a look at fast.ai, a deep learning library like TensorFlow and Pytorch that allows us to use their built in models and functions to perform machine learning-related tasks. In this unit, I chose to use fast.ai to classify chest x-rays as whether they indicated the patient had pneumonia or not.

@@ -195,18 +195,20 @@ for y in range(0, dims[1] - 1):
         pix[x+1,y+1] = (pix[x+1,y+1][0] + round(quant_error[0] * (1/16)), pix[x+1,y+1][1] + round(quant_error[1] * (1/16)), pix[x+1,y+1][2] + round(quant_error[2] * (1/16)))
 
 offset = dims[0]//k
-new_img = Image.new("RGB", (dims[0], dims[1] + (offset)), 0)
+new_img = Image.new("RGB", (dims[0], dims[1] + offset), 0)
 new_pix = new_img.load()
 
-for i in range(img.size[0]):
-    for j in range(img.size[1]):
-        new_pix[i, j] = pix[i, j]
+for i in range(dims[0]):
+    for j in range(dims[1]):
+        new_pix[i,j] = pix[i,j]
 
-orig_rgb = [tuple([round(j) for j in orig_rgb[i]]) for i in range(k)]
+for ct, val in enumerate(orig_rgb):
+    orig_rgb[ct] = (round(val[0]), round(val[1]), round(val[2]))
+
 for i in range(k):
     for j in range(offset):
-        for k in range(offset):
-            new_pix[j+i*offset, img.size[1]+k] = orig_rgb[i]
+        for l in range(offset):
+            new_pix[j + i*offset, dims[1] + l] = orig_rgb[i]
 
 final_img = new_img.save("kmeansout.png")
 end_time = time.time()
